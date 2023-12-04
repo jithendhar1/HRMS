@@ -32,7 +32,7 @@
 											<div class="form-group">
 												<label>Purchase Date</label>
 												<div class="cal-icon">
-												<input name="PurchaseDate" class="form-control datetimepicker" type="text"></div>
+												<input name="PurchaseDate" class="form-control "   required pattern="\d{4}-\d{2}-\d{2}" title="Please enter a date in the format YYYY-MM-DD" type="text"></div>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -77,14 +77,14 @@
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
-												<label>Supplier Name</label>
+												<label>Supplier Id</label>
 												<select required name="Supplierid" class="form-control" class="select">
                                                         <%
 											List<SupplierBean> dept = SupplierDAO.getAllSuppliers(); 
 											for(SupplierBean dep: dept)
 											{
 											%>
-                                           <option  value="<%= dep.getSupplierID() %>"><%= dep.getSupplierName() %></option>
+                                           <option  value="<%= dep.getSupplierID() %>"><%= dep.getSupplierID() %></option>
                                         <%
                           					}
 									     %>

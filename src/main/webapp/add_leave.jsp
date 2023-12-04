@@ -113,22 +113,33 @@
     endDate.addEventListener("input", calculateDays);
 
     function calculateDays() {
-        const startDateValue = Date.parse(startingDate.value);
-        const endDateValue = Date.parse(endDate.value);
+        const startDateValue = new Date(startingDate.value);
+        const endDateValue = new Date(endDate.value);
 
-        if (!isNaN(startDateValue) && !isNaN(endDateValue)) {
-            // Calculate the difference in days
-            const differenceInMilliseconds = endDateValue - startDateValue;
-            const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+        // Check if both dates are valid
+        if (!isNaN(startDateValue.getTime()) && !isNaN(endDateValue.getTime())) {
+            let days = 0;
+            let currentDate = startDateValue;
+
+            while (currentDate <= endDateValue) {
+                // Exclude Sundays (0) and Saturdays (6)
+                if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+                    days++;
+                }
+
+                // Move to the next day
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
 
             // Update the "Number of days" input
-            daysCount.value = differenceInDays;
+            daysCount.value = days;
         } else {
             // If either date is not valid, clear the "Number of days" input
             daysCount.value = "";
         }
     }
 </script>
+
                     <div class="form-group">
                         <label for="reason">Leave Reason <span class="text-danger">*</span></label>
                         <textarea id="reason" name="reason" rows="4" class="form-control"></textarea>

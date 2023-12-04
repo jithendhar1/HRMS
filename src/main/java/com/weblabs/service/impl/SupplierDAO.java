@@ -84,10 +84,10 @@ public class SupplierDAO {
         try {
             connection = DBUtil.provideConnection();
             String query = "SELECT supplierID, supplierName, productDetails FROM supplier";
-            if (!whereClause.isEmpty()) {
-                query += " WHERE " + whereClause;
+            if (whereClause != null && !whereClause.isEmpty()) {
+                query = "SELECT supplierID, supplierName, productDetails FROM supplier WHERE " + whereClause+ " LIMIT ?, ?;";
             }
-            query += " LIMIT ?, ?";
+            query = "SELECT supplierID, supplierName, productDetails FROM supplier LIMIT ?, ?";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, start);
             preparedStatement.setInt(2, limit);
@@ -101,16 +101,19 @@ public class SupplierDAO {
                 filteredSuppliers.add(supplier);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-   		 try {
-   			 connection.close();
-   		 } catch (SQLException ex) {
-   		 ex.printStackTrace();
-   		 }
-   		 }
+            // Handle exceptions
+        	 e.printStackTrace();
+        } finally {
             // Close database resources (connection, statement, result set)
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (Exception e) {
+                // Handle exceptions
+            	 e.printStackTrace();
+            }
+        }
         	
       
         return filteredSuppliers;

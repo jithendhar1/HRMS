@@ -21,41 +21,27 @@ public class AddTimeSheetSrv extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-//        HttpSession session = request.getSession();
-//        String userType = (String) session.getAttribute("usertype");
-//        String userName = (String) session.getAttribute("username");
-//        String password = (String) session.getAttribute("password");
-//
-//        if (userType == null || !userType.equals("admin")) {
-//            response.sendRedirect("login.jsp?message=Access Denied!");
-//        } else if (userName == null || password == null) {
-//            response.sendRedirect("login.jsp?message=Session Expired, Login Again to Continue!");
-//        }
-
+//TimesheetID, Employee_Id, DateWorked, project_id, task_id, HoursWorked
         String status = "Add Timesheet Failed!";
-        String id = request.getParameter("id");
-        String project = request.getParameter("project");
-        String deadline = request.getParameter("deadline");
-        String totalhours = request.getParameter("totalhours");
-        String remaininghours = request.getParameter("remaininghours");
-        String date = request.getParameter("date");
-        String hours = request.getParameter("hours");
-        String description = request.getParameter("description");
+       // String TimesheetID = request.getParameter("TimesheetID");
+      
+        String Employee_Id = request.getParameter("Employee_Id");
+        String DateWorked = request.getParameter("DateWorked");
+        String project_id = request.getParameter("project_id");
+        String task_id = request.getParameter("task_id");
+        String HoursWorked = request.getParameter("HoursWorked");
+        
         
         AddTimeSheetImpl time =new AddTimeSheetImpl();
-        status=time.addTimesheet(id, project,deadline,totalhours,remaininghours,date,hours,description);
+        status=time.addTimesheet(Employee_Id, DateWorked, project_id, task_id, HoursWorked);
         
         
-       //  String status = "success"; // Replace with your status variable
+
         RequestDispatcher rd = request.getRequestDispatcher("add_timesheet.jsp");
         request.setAttribute("message", status);
         rd.forward(request, response);
     		  
-		/*
-		 * RequestDispatcher rd =
-		 * request.getRequestDispatcher("add_timesheet.jsp?message=" + status);
-		 * rd.forward(request, response);
-		 */
+		
     } 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

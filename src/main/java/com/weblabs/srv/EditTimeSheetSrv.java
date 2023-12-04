@@ -23,48 +23,31 @@ public class EditTimeSheetSrv extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-      //  HttpSession session = request.getSession();
-      //  String userType = (String) session.getAttribute("usertype");
-      //  String userName = (String) session.getAttribute("username");
-      //  String password = (String) session.getAttribute("password");
-
-       // if (userType == null || !userType.equals("admin")) {
-          //  response.sendRedirect("login.jsp?message=Access Denied, Login As Admin!!");
-           // return;
-       // } else if (userName == null || password == null) {
-           // response.sendRedirect("login.jsp?message=Session Expired, Login Again!!");
-          //  return;
-        //}
-
-        // Login success
     	
         String status = "Edit Employee Failed!";
-        String id= request.getParameter("id");
-        String project = request.getParameter("project");
-        String deadline = request.getParameter("deadline");
-        String totalhours = request.getParameter("totalhours");
-        String remaininghours= request.getParameter("remaininghours");
-        String date= request.getParameter("date");
-        String hours= request.getParameter("hours");
-        String description= request.getParameter("description");
-       
+        String TimesheetID= request.getParameter("TimesheetID");
+        String Employee_Id = request.getParameter("Employee_Id");
+        String DateWorked = request.getParameter("DateWorked");
+        String project_id = request.getParameter("project_id");
+        String task_id= request.getParameter("task_id");
+        String HoursWorked= request.getParameter("HoursWorked");
+        
       
         
 
         AddTimesheet employee = new AddTimesheet();
-        employee.setId(id);
-        employee.setProject(project);
-        employee.setDeadline(deadline);
-        employee.setTotalhours (totalhours);
-        employee.setRemainingHours(remaininghours);
-        employee.setDate(date);
-        employee.setHours(hours);
-        employee.setDescription(description);
+        employee.setTimesheetID(TimesheetID);
+        employee.setEmployee_Id(Employee_Id);
+        employee.setDateWorked(DateWorked);
+        employee.setProject_id(project_id);
+        employee.setTask_id(task_id);
+        employee.setHoursWorked(HoursWorked);
+       
         
         
         AddTimeSheetImpl dao = new AddTimeSheetImpl();
 
-        String status1 = dao.editTimesheet(id,project,deadline,totalhours,remaininghours,date, hours, description );
+        String status1 = dao.editTimesheet(TimesheetID, Employee_Id, DateWorked, project_id, task_id, HoursWorked );
 
         RequestDispatcher rd = request.getRequestDispatcher("edit_timesheet.jsp?message=" + status);
         rd.forward(request, response);

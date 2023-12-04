@@ -7,6 +7,8 @@ public class SupplierBean {
 	private String	supplierID;
 	private String	supplierName;
 	private String	productDetails;
+	
+	
 	public String getSupplierID() {
 		return supplierID;
 	}

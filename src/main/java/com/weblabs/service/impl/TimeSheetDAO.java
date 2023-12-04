@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.weblabs.beans.AddTimesheet;
@@ -20,9 +21,9 @@ public class TimeSheetDAO {
             connection = DBUtil.provideConnection();
             String query;
             if (whereClause != null && !whereClause.isEmpty()) {
-                query = "SELECT id, Project, Deadline, totalhours, Remaininghours, Date, Hours, DescriptionName FROM timesheet WHERE " + whereClause + " LIMIT ? , ?;";
+                query = "SELECT TimesheetID, Employee_Id, DateWorked, project_id, task_id, HoursWorked FROM timesheet WHERE " + whereClause + " LIMIT ? , ?;";
             } else {
-                query = "SELECT id, Project, Deadline, totalhours, Remaininghours, Date, Hours, DescriptionName FROM timesheet LIMIT ? , ?;";
+                query = "SELECT TimesheetID, Employee_Id, DateWorked, project_id, task_id, HoursWorked FROM timesheet LIMIT ? , ?;";
             }
 
             preparedStatement = connection.prepareStatement(query);
@@ -33,27 +34,26 @@ public class TimeSheetDAO {
 
             while (resultSet.next()) {
                 AddTimesheet timesheet = new AddTimesheet();
-                timesheet.setId(resultSet.getString("id"));
-                timesheet.setProject(resultSet.getString("Project"));
-                timesheet.setDeadline(resultSet.getString("Deadline"));
-                timesheet.setTotalhours(resultSet.getString("totalhours"));
-                timesheet.setRemainingHours(resultSet.getString("Remaininghours"));
-                timesheet.setDate(resultSet.getString("Date"));
-                timesheet.setHours(resultSet.getString("Hours"));
-                timesheet.setDescription(resultSet.getString("DescriptionName"));
+                timesheet.setTimesheetID(resultSet.getString("TimesheetID"));
+                timesheet.setEmployee_Id(resultSet.getString("Employee_Id"));
+                timesheet.setDateWorked(resultSet.getString("DateWorked"));
+                timesheet.setProject_id(resultSet.getString("project_id"));
+                timesheet.setTask_id(resultSet.getString("task_id"));
+                timesheet.setHoursWorked(resultSet.getString("HoursWorked"));
+               
                 filteredTimesheets.add(timesheet);
             }
         } catch (Exception e) {
-            // Handle exceptions
+      
             e.printStackTrace();
         } finally {
-            // Close database resources (connection, statement, result set)
+     
             try {
                 if (resultSet != null) resultSet.close();
                 if (preparedStatement != null) preparedStatement.close();
                 if (connection != null) connection.close();
             } catch (Exception e) {
-                // Handle exceptions
+   
                 e.printStackTrace();
             }
         }
@@ -61,27 +61,7 @@ public class TimeSheetDAO {
         return filteredTimesheets;
     }
 
-	/*
-	 * public int getRecordCount() { Connection connection = null; PreparedStatement
-	 * statement = null; ResultSet resultSet = null; int recordCount = 0;
-	 * 
-	 * try { // Establish a database connection (you should configure your database
-	 * URL, username, and password) connection = DBUtil.provideConnection(); //
-	 * Define the SQL query to count the records String sql =
-	 * "SELECT COUNT(1) FROM timesheet";
-	 * 
-	 * // Prepare the statement statement = connection.prepareStatement(sql);
-	 * 
-	 * // Execute the query and retrieve the count resultSet =
-	 * statement.executeQuery(); if (resultSet.next()) { recordCount =
-	 * resultSet.getInt(1); } } catch (Exception e) { e.printStackTrace(); // Handle
-	 * any database errors here } finally { // Close the resources try { if
-	 * (resultSet != null) resultSet.close(); if (statement != null)
-	 * statement.close(); if (connection != null) connection.close(); } catch
-	 * (Exception e) { e.printStackTrace(); } }
-	 * 
-	 * return recordCount; }
-	 */
+	
     public static int totalCount() {
 		 int count = 0;
 		 Connection connection = null;
@@ -108,4 +88,44 @@ public class TimeSheetDAO {
 		 }
     
     
+    
+    public double getTotalHoursForPresentMonth() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue(), 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        return getTotalHoursForDateRange(startDate, endDate);
+    }
+
+    public double getTotalHoursForPreviousMonth() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue() - 1, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        return getTotalHoursForDateRange(startDate, endDate);
+    }
+
+    public double getTotalHoursForDateRange(LocalDate startDate, LocalDate endDate) {
+        double totalHours = 0.0;
+
+        try (Connection connection = DBUtil.provideConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT SUM(HoursWorked) AS totalHours FROM timesheet WHERE DateWorked BETWEEN ? AND ?;"
+             )) {
+
+            preparedStatement.setDate(1, java.sql.Date.valueOf(startDate));
+            preparedStatement.setDate(2, java.sql.Date.valueOf(endDate));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    totalHours = resultSet.getDouble("totalHours");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Consider logging instead of printing to the console
+        }
+
+        return totalHours;
+    }
+
 }

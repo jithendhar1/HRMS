@@ -93,20 +93,11 @@ public class ExpensesDao {
 
 			
 			  
-	 public double getTotalExpenseForPresentMonth() {
-	        LocalDate currentDate = LocalDate.now();
-	        LocalDate startDate = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue(), 1);
-	        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-
-	        return getTotalExpenseForDateRange(startDate, endDate);
-	    }
-
-	    public double getTotalExpenseForPreviousMonth() {
+	 public double getTotalExpenseForPreviousMonth() {
 	        LocalDate currentDate = LocalDate.now();
 	        LocalDate startDate = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue() - 1, 1);
-	        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-	        return getTotalExpenseForDateRange(startDate, endDate);
+	        return getTotalExpenseForDateRange(startDate, startDate.withDayOfMonth(startDate.lengthOfMonth()));
 	    }
 
 	    public double getTotalExpenseForDateRange(LocalDate startDate, LocalDate endDate) {
@@ -135,12 +126,43 @@ public class ExpensesDao {
 		
 
 
+//sum of total Amounts
 
 
+	    public static double getTotalAmount() {
+	        double totalAmount = 0.0;
+	        Connection connection = null;
+	        PreparedStatement preparedStatement = null;
+	        ResultSet resultSet = null;
+
+	        try {
+	            connection = DBUtil.provideConnection();
+	            String query = "SELECT SUM(Amount) AS totalAmount FROM expenses;";
+	            preparedStatement = connection.prepareStatement(query);
+	            resultSet = preparedStatement.executeQuery();
+
+	            if (resultSet.next()) {
+	                totalAmount = resultSet.getDouble("totalAmount");
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                if (resultSet != null) resultSet.close();
+	                if (preparedStatement != null) preparedStatement.close();
+	                if (connection != null) connection.close();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+
+	        return totalAmount;
+	    }
 
 
-
-
+	    
+	    
 }
 
 	 

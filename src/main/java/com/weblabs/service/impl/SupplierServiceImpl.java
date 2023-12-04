@@ -10,7 +10,7 @@ import com.weblabs.utility.DBUtil;
 public class SupplierServiceImpl implements SupplierService {
     @Override
     public String addsup(String supplierName,String productDetails) {
-        String Status1 = " Adding Failed!";
+        String Status1 = " Adding Supplier Failed!";
         Connection con = DBUtil.provideConnection();
         PreparedStatement ps = null;
         try {
@@ -33,6 +33,7 @@ public class SupplierServiceImpl implements SupplierService {
         }
         return Status1;
     }
+    
 
     @Override
     public String deletesup(String supplierID) {
@@ -56,6 +57,7 @@ public class SupplierServiceImpl implements SupplierService {
         return status;
     }
 
+    
     @Override
     public String editsup(String supplierID,String supplierName,String productDetails) {
         String status = "Updating Failed!";
@@ -63,12 +65,12 @@ public class SupplierServiceImpl implements SupplierService {
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(
-                    "UPDATE supplier SET  supplierName = ?, productDetails = ?,  WHERE supplierID = ?");
+                    "UPDATE supplier SET  supplierName = ?, productDetails = ?  WHERE supplierID = ?");
     
 
 			  ps.setString(1, supplierName); 
 			  ps.setString(2, productDetails);
-			 
+			  ps.setString(3,supplierID);
 			 
             int k = ps.executeUpdate();
             if (k > 0) {

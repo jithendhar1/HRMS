@@ -37,8 +37,31 @@
     <!--[if lt IE 9]-->
     <script src="js/html5shiv.min.js"></script>
     <script src="js/respond.min.js"></script>
- </head>
+    <!--<![endif]-->
+</head>
 <body>
+
+<%
+    int start = 0;
+    int limit = 25;
+
+    String idFilter = request.getParameter("supplierID");
+    List<SupplierBean> tasksList = null;
+    String whereClause = "";
+
+    if (idFilter != null && !idFilter.isEmpty()) {
+        whereClause += "supplierID = '" + idFilter + "'";
+    }
+
+    if (!whereClause.isEmpty()) {
+        tasksList = SupplierDAO.getFilteredSuppliers(whereClause, start, limit);
+    }
+
+    if (tasksList != null && !tasksList.isEmpty()) {
+        SupplierBean task = tasksList.get(0);
+
+        if (task != null) {
+%>
 
 <div class="main-wrapper">
     <!-- Header -->
@@ -59,21 +82,26 @@
                     <div class="main-wrapper">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Supplier Name</label>
-                                        <input name="supplierName" class="form-control" type="text" required>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="col-form-label"><span class="text-danger">*</span>supplierID</label>
+                                    <input name="supplierID" required class="form-control" type="text" readonly value="<%= task.getSupplierID()%>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Product Details</label>
-                                        <input name="productDetails" class="form-control" type="text" required>
-                                    </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Supplier Name <span class="text-danger">*</span></label>
+                                    <input name="supplierName" required class="form-control" type="text" value="<%= task.getSupplierName()%>">
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Product Details <span class="text-danger">*</span></label>
+                                    <input name="productDetails" required class="form-control" type="text" value="<%= task.getProductDetails()%>">
+                                </div>
+                            </div>
+
                             <div class="submit-section">
                                 <button type="submit" name="update_assets" class="btn btn-primary submit-btn">Update</button>
                             </div>
@@ -86,15 +114,17 @@
 </div>
 
 <%
-    HttpSession sessionstatus = request.getSession(true);
-    if (sessionstatus.getAttribute("status") != null && sessionstatus.getAttribute("status").equals("provident found Position Updated Successfully!")) {
-        response.sendRedirect("supplier.jsp");
-    } else {
+            HttpSession sessionstatus = request.getSession(true);
+            if (sessionstatus.getAttribute("status") != null && sessionstatus.getAttribute("status").equals("provident found Position Updated Successfully!")) {
+                response.sendRedirect("supplier.jsp");
+            } else {
 %>
    <div class="col-sm-6">
 		<p>Supplier not found with the provided details.</p>
-</div>
+   </div>
 <%
+            }
+        }
     }
 %>
 

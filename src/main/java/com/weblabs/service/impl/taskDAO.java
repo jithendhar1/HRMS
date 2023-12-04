@@ -4,9 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+//import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.weblabs.beans.EmployeeBean;
 import com.weblabs.beans.TasksBean;
 import com.weblabs.utility.DBUtil;
 
@@ -89,5 +94,89 @@ public class taskDAO {
 		 return count;
 		 }
 
-  }
+	  public static List<TasksBean> getAllTasks() {
+	        List<TasksBean> allTasks = new ArrayList<>();
+	        Connection connection = null;
+	        PreparedStatement preparedStatement = null;
+	        ResultSet resultSet = null;
+
+	        try {
+	            connection = DBUtil.provideConnection();
+	            String query = "SELECT  task_id, project_id, description, start_date, end_date, assigned_resource, is_completed FROM tasks";
+	            preparedStatement = connection.prepareStatement(query);
+	            resultSet = preparedStatement.executeQuery();
+
+	            while (resultSet.next()) {
+	            	TasksBean tasks1 = new TasksBean();
+	               
+	            	tasks1.setTask_id(resultSet.getString("task_id"));
+	            	tasks1.setProject_id(resultSet.getString("project_id"));
+	            	tasks1.setDescription(resultSet.getString("description"));
+	            	tasks1.setStart_date(resultSet.getString("start_date"));
+	            	tasks1.setEnd_date(resultSet.getString("end_date"));
+	            	tasks1.setAssigned_resource(resultSet.getString("assigned_resource"));
+	            	tasks1.setIs_completed(resultSet.getString("is_completed"));
+	            	allTasks.add(tasks1);
+	            }
+	        } catch (Exception e) {
+	            // Handle exceptions
+	            e.printStackTrace();
+	        } finally {
+	            // Close database resources (connection, statement, result set)
+	            try {
+	                if (resultSet != null) resultSet.close();
+	                if (preparedStatement != null) preparedStatement.close();
+	                if (connection != null) connection.close();
+	            } catch (Exception e) {
+	                // Handle exceptions
+	                e.printStackTrace();
+	            }
+	        }
+
+	        return allTasks;
+	    }
+	        
+
+	  
+	  public static Map<String, Integer> getTaskCountsForProject(int projectId) {
+		    Map<String, Integer> taskCounts = new HashMap<>();
+		    Connection connection = null;
+		    PreparedStatement preparedStatement = null;
+		    ResultSet resultSet = null;
+
+		    try {
+		        connection = DBUtil.provideConnection();
+		        String query = "SELECT " +
+		                "COUNT(1) AS totalTaskCount, " +
+		                "COUNT(CASE WHEN is_completed = 'Approved' THEN 1 END) AS completedCount, " +
+		                "COUNT(CASE WHEN is_completed != 'Approved' THEN 1 END) AS pendingCount " +
+		                "FROM tasks WHERE project_id = ?";
+		        preparedStatement = connection.prepareStatement(query);
+		        preparedStatement.setInt(1, projectId);
+		        resultSet = preparedStatement.executeQuery();
+
+		        if (resultSet.next()) {
+		            taskCounts.put("totalTaskCount", resultSet.getInt("totalTaskCount"));
+		            taskCounts.put("completedCount", resultSet.getInt("completedCount"));
+		            taskCounts.put("pendingCount", resultSet.getInt("pendingCount"));
+		        }
+		    } catch (Exception e) {
+		        // Handle exceptions
+		        e.printStackTrace();
+		    } finally {
+		        // Close database resources (connection, statement, result set)
+		        try {
+		            if (resultSet != null) resultSet.close();
+		            if (preparedStatement != null) preparedStatement.close();
+		            if (connection != null) connection.close();
+		        } catch (Exception e) {
+		            // Handle exceptions
+		            e.printStackTrace();
+		        }
+		    }
+
+		    return taskCounts;
+		}
+
+}
 

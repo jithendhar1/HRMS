@@ -22,7 +22,7 @@ public class DeleteTimeSheetSrv extends HttpServlet {
             throws ServletException, IOException {
 
   
-    	String id = request.getParameter("id");
+    	String id = request.getParameter("TimesheetID");
 
     	AddTimeSheetImpl time = new AddTimeSheetImpl();
 

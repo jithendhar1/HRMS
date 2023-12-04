@@ -1,3 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.weblabs.service.impl.AddPFDAO" %>
+<%@ page import="com.weblabs.beans.AddPF" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Update Employee</title>
+    <!-- Add your CSS and JavaScript includes here -->
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/logo.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!-- Lineawesome CSS -->
+    <link rel="stylesheet" href="css/line-awesome.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="css/select2.min.css">
+
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- table styles CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]-->
+   <!--  <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>  -->
+ </head>
+<body>
+
+<%
+    int start = 0;
+    int limit = 25;
+
+    String idFilter = request.getParameter("id"); // Make sure the parameter name matches your form
+    List<AddPF> pf = null; // Initialize the list as empty
+
+    String whereClause = ""; // Initialize an empty whereClause
+
+    if (idFilter != null && !idFilter.isEmpty()) {
+        whereClause += "Id = '" + idFilter + "'";
+    }
+
+    if (!whereClause.isEmpty()) {
+        // Apply the whereClause condition
+        pf = AddPFDAO.getFilteredAddPF(whereClause, start, limit);
+    }
+
+    if (pf != null && !pf.isEmpty()) {
+    	AddPF pfs = pf.get(0); // Access the first element
+        if (taxes != null) {
+%>
+
+
+  <div class="main-wrapper">
+    <jsp:include page="header.jsp" />
+    <jsp:include page="sidebar.jsp" />
+
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+
+        <!-- Page Content -->
+        <div class="content container-fluid">
+
+            <!-- Page Header -->
+            <div class="page-header">
+
 <form action="./EditPFSrv" method="post">
 <div id="edit_pf" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">

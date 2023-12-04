@@ -63,62 +63,69 @@
         if (taxes != null) {
 %>
 
-<form action="./EditTaxSrv" method="post">
+
   <div class="main-wrapper">
+    <jsp:include page="header.jsp" />
+    <jsp:include page="sidebar.jsp" />
 
-      <jsp:include page="header.jsp" />
-     <jsp:include page="sidebar.jsp" />
-        
-        <!-- Page Wrapper -->
-        <div class="page-wrapper">
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
 
-            <!-- Page Content -->
-            <div class="content container-fluid">
+        <!-- Page Content -->
+        <div class="content container-fluid">
 
-                <!-- Page Header -->
-                
-                <div class="page-header">
-    
+            <!-- Page Header -->
+            <div class="page-header">
+                <form action="./EditTaxSrv" method="post">
                     <div class="row">
                         <div class="col-sm-6">
-							<div class="modal-body">
-							 
-							 <div class="form-group">
-				             <label>ID <span class="text-danger">*</span></label>
-				               <input name="id" value="<%= taxes.getID() %>" required class="form-control" type="text">
-				             </div>
-							<div class="modal-body">
-								
-									<div class="form-group">
-										<label>Tax Name <span class="text-danger">*</span></label>
-										<input name="taxname" value="<%= taxes.getTaxName() %>" required class="form-control" value="VAT" type="text">
-									</div>
-									<div class="form-group">
-										<label>Tax Percentage (%)  <span class="text-danger">*</span></label>
-										<input name="taxper" value="<%= taxes.getTaxPercentage()%>" required class="form-control" value="14%" type="text">
-									</div>
-									<div class="form-group">
-										<label>Status <span class="text-danger">*</span></label>
-										<select class="select" value="<%= taxes.getStatus()%>" required name="status" >
-											<option>Active</option>
-											<option>Inactive</option>
-										</select>
-									</div>
-									
-									
-									</div>
+                            <div class="form-group">
+                                <label class="col-form-label">Id <span class="text-danger">*</span></label>
+                                <input name="id" value="<%= taxes.getID() %>" required class="form-control" type="text" readonly>
+                            </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Tax Name <span class="text-danger">*</span></label>
+                                <input name="taxname" value="<%= taxes.getTaxName() %>" required class="form-control" value="VAT" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tax Percentage (%) <span class="text-danger">*</span></label>
+                                <input name="taxper" value="<%= taxes.getTaxPercentage()%>" required class="form-control" value="14%" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status <span class="text-danger">*</span></label>
+                                <select class="select" value="<%= taxes.getStatus()%>" required name="status">
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    
+                    <!-- Closing div for the row -->
                     </div>
-                    </div>
+
                     <div class="submit-section">
                         <button type="submit" class="btn btn-primary submit-btn">Update</button>
                     </div>
-                
+                </form>
             </div>
+            <!-- Closing div for page-header -->
         </div>
+        <!-- Closing div for content container-fluid -->
     </div>
-    </div>
-    </form>
+    <!-- Closing div for page-wrapper -->
+</div>
+<!-- Closing div for main-wrapper -->
+
+    
 <%
     HttpSession sessionstatus = request.getSession(true);
     if (sessionstatus.getAttribute("status") != null && sessionstatus.getAttribute("status").equals("provident found Position Updated Successfully!")) {

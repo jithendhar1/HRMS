@@ -97,6 +97,7 @@
     }
 </script>
 
+
 <!-- Your HTML content, including the table and pagination controls -->
 <div class="content container-fluid">
     <!-- Main Wrapper -->
@@ -134,20 +135,33 @@
                         </div>
                     </div>
                 </div>
+                
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+                
                 <!-- Search form -->
-                <form action="./AssetSearchServlet" method="post">
+                <form action="./SupplierSearchSrv" method="post">
                     <div class="row filter-row">
                         <div class="col-sm-6 col-md-3">
                             <div class="form-group form-focus">
-                                <label for="assetName">Supplier Name:</label>
-                                <input type="text" name="assetName" id="assetName">
+                                <label for="supplierName">Supplier Name:</label>
+                                <input type="text" name="supplierName" id="supplierName">
                             </div>
                         </div>
 
                         <div class="col-sm-6 col-md-3">
                             <div class="form-group form-focus select-focus">
-                                <label for="assetId">Asset ID:</label>
-                                <input type="text" name="assetId" id="assetId">
+                                <label for="supplierID">ID:</label>
+                                <input type="text" name="supplierID" id="supplierID">
                             </div>
                         </div>
 
@@ -165,13 +179,11 @@
                             <option value="20">20</option>
                             <option value="50">50</option>
                         </select>
-                    </div>
-                </form>
+                  
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
+          </form>
                         <table>
+                        <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Supplier Name</th>
@@ -179,7 +191,7 @@
                                 <th>Action</th>
                                 
                             </tr>
-
+</thead>
                             <!-- Data rows -->
                             <%
                                 int start = currentPage;
@@ -199,21 +211,21 @@
                                 // Pagination code ended
 
                                 String supplierNameFilter = request.getParameter("supplierName");
-                                String productDetailsFilter = request.getParameter("productDetails");
+                                String idFilter = request.getParameter("supplierID");
 
                                 List<SupplierBean> suppliers;
 
                                 String whereClause = ""; // Initialize an empty whereClause
 
                                 if (supplierNameFilter != null && !supplierNameFilter.isEmpty()) {
-                                    whereClause = "supplierName like '%" + supplierNameFilter + "%'";
+                                    whereClause = "supplierName = '" + supplierNameFilter +"'";
                                 }
 
-                                if (productDetailsFilter != null && !productDetailsFilter.isEmpty()) {
+                                if (idFilter != null && !idFilter.isEmpty()) {
                                     if (!whereClause.isEmpty()) {
                                         whereClause += " or ";
                                     }
-                                    whereClause += "productDetails = '" + productDetailsFilter + "'";
+                                    whereClause += "supplierID = '" + idFilter + "'";
                                 }
 
                                 // Pagination
@@ -235,17 +247,15 @@
                                 <td><%= supplier.getSupplierName() %></td>
                                 <td><%= supplier.getProductDetails() %></td>
                                 <td>
-                                    <a href="EditSupplier.jsp?id=<%= supplier.getSupplierID()%>">Edit</a>
-                                    <a href="DeleteSupplierSSrv?assetId=<%=supplier.getSupplierID() %>">Delete</a>
+                                    <a href="EditSupplier.jsp?supplierID=<%= supplier.getSupplierID()%>">Edit</a>
+                                    <a href="DeleteSupplierSrv?supplierID=<%=supplier.getSupplierID() %>">Delete</a>
                                 </td>
                             </tr>
                             <%
                                 }
                             %>
                         </table>
-                    </div>
-                </div>
-            </div>
+
 
             <div class="row justify-content-center align-items-center">
                 <!-- Pagination links -->
@@ -268,7 +278,11 @@
 
     <jsp:include page="AddSupplier.jsp" />
     <!-- Include your Add Employee Modal HTML here -->
-
+<%--  <jsp:include page="EditSupplier.jsp" />
+				<!-- /Edit Tax Modal -->
+				
+				<!-- Delete Tax Modal -->
+<jsp:include page="deleteSupplier.jsp" /> --%>
     <!-- Include your Add Holiday Modal HTML here -->
 </div>
 <!-- jQuery -->
@@ -301,7 +315,7 @@
             // Make an AJAX request to the server
             $.ajax({
                 type: "POST", // Use POST or GET depending on your servlet configuration
-                url: "./AssetSearchServlet",
+                url: "./SupplierSearchSrv",
                 data: {
                     username: usernameFilter,
                     id: idFilter

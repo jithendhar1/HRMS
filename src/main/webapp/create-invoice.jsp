@@ -1,4 +1,5 @@
 <%@page import="com.weblabs.service.impl.AppProjectDAO"%>
+<%@page import="com.weblabs.service.impl.ProjectDAO"%>
 <%@page import="com.weblabs.service.impl.AddClientsDAO"%>
 <%@page import="com.weblabs.service.impl.InvoiceDAO"%>
 <%@ page import="com.weblabs.beans.AddClient" %>	
@@ -51,6 +52,8 @@
 			    pointer-events: none; /* Remove pointer events, making it non-clickable */
 			}
     </style>
+    
+     <script src="js/validateForm.js"></script>
     </head>
     <body>
     <form action="./AddInvoiceSrv" method="post">
@@ -113,21 +116,24 @@
 											<select required name="projectname" class="select">
                                            <!--    <input type="hidden" id="departmentIdInput" name="departmentId" value="">  -->
                                              <%
-											List<CreateProject> prj = AppProjectDAO.getAllproject();
-											for(CreateProject dep: prj)
-											{
-											%>
-                                           <option><%= dep.getProjectname()%></option>
-                                        <%
-                          					}
-									     %>
+                                             List<CreateProject> projectNames = ProjectDAO.getAllProjects(); // Retrieve project names
+                                             
+                                             for (CreateProject projectName : projectNames) {
+                                         %>
+                                         <option  value="<%= projectName.getProjectname()%>"><%= projectName.getProjectname()%></option>
+                                         <%
+                                             }
+                                         %>
 									     </select>
 										</div>
 									</div>
 									<div class="col-sm-6 col-md-3">
 										<div class="form-group">
 											<label>Email</label>
-											<input name="email" class="form-control" type="email">
+											<!-- <input name="email" class="form-control" type="email"> -->
+											 <input name="email" id="email" required class="form-control" type="text" oninput="validateEmail(this.value, 'emailError')">
+                                           <span id="emailError" style="display: none; color: red;"></span>
+                            
 										</div>
 									</div>
 									<div class="col-sm-6 col-md-3">
@@ -190,16 +196,19 @@
 												<tr>
 													<td>1</td>
 													<td>
-														<input name="items" class="form-control" type="text" style="min-width:150px">
+													<!-- 	<input name="items" class="form-control" type="text" style="min-width:150px"> -->
+														 <input name="items" id="items" required class="form-control" type="text"  oninput="validateName(this.value, 'itemsError')" >
+                                                        <span id="itemsError" style="display: none; color: red;"></span>
+                              
 													</td>
 													<td>
 														<input name="description" class="form-control" type="text" style="min-width:150px">
 													</td>
 													<td>
-														<input name="unitcost" class="form-control" style="width:100px" type="text">
+														<input name="unitcost" class="form-control" style="width:100px" type="number">
 													</td>
 													<td>
-														<input name="qty" class="form-control" style="width:80px" type="text"  onblur="calculateStaticAmount()">
+														<input name="qty" class="form-control" style="width:80px" type="number"  onblur="calculateStaticAmount()">
 													</td>
 													<td>
 														<input name="amount" class="form-control" style="width:100px" type="text" readonly>
@@ -309,6 +318,137 @@
 		
 		<!-- Custom JS -->
 		<script src="js/app.js"></script>
+		
+		
+		
+		<script>
+var rowCount = 1; // Initialize the row count to 0
+
+function addItem(button) {
+	  var table = document.getElementById("itemTable").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(-1); // Insert a new row at the end of the table
+
+    var cell1 = newRow.insertCell(0);
+    cell1.innerHTML = rowCount + 1; // Auto-increment item number
+
+    var cell2 = newRow.insertCell(1);
+    var itemsInput = document.createElement("input");
+    itemsInput.name = "items";
+    itemsInput.className = "form-control";
+    itemsInput.type = "text";
+    itemsInput.style.minWidth = "150px";
+    cell2.appendChild(itemsInput);
+
+    var cell3 = newRow.insertCell(2);
+    var descriptionInput = document.createElement("input");
+    descriptionInput.name = "description";
+    descriptionInput.className = "form-control";
+    descriptionInput.type = "text";
+    descriptionInput.style.minWidth = "150px";
+    cell3.appendChild(descriptionInput);
+
+    var cell4 = newRow.insertCell(3);
+    var unitCostInput = document.createElement("input");
+    unitCostInput.name = "unitcost";
+    unitCostInput.className = "form-control";
+    unitCostInput.type = "text";
+    unitCostInput.style.width = "100px";
+    cell4.appendChild(unitCostInput);
+
+    var cell5 = newRow.insertCell(4);
+    var qtyInput = document.createElement("input");
+    qtyInput.name = "qty";
+    qtyInput.className = "form-control";
+    qtyInput.type = "text";
+    qtyInput.style.width = "80px";
+    qtyInput.onblur = calculateAmount;
+    cell5.appendChild(qtyInput);
+
+    var cell6 = newRow.insertCell(5);
+    var amountInput = document.createElement("input");
+    amountInput.name = "amount";
+    amountInput.className = "form-control";
+    amountInput.type = "text";
+    amountInput.style.width = "100px";
+    amountInput.readOnly = true;
+    cell6.appendChild(amountInput);
+    
+    var cell7 = newRow.insertCell(6);
+    var addLink = document.createElement("a");
+    addLink.href = "javascript:void(0)";
+    addLink.className = "text-success font-18";
+    addLink.title = "Add";
+    addLink.innerHTML = '<i class="fa fa-plus"></i>';
+    addLink.onclick = addItem;
+    cell7.appendChild(addLink);
+
+    var cell8 = newRow.insertCell(7);
+    var removeLink = document.createElement("a");
+    removeLink.href = "javascript:void(0)";
+    removeLink.className = "text-danger font-18";
+    removeLink.title = "Remove";	
+    removeLink.innerHTML = '<i class="fa fa-trash-o"></i>';
+    removeLink.onclick = removeItem;
+    cell8.appendChild(removeLink);
+
+    rowCount++; // Increment the row count
+    var qtyInput = newRow.querySelector('input[name="qty"]');
+    qtyInput.addEventListener("blur", function () {
+        calculateAmount(newRow);
+    });
+
+ 
+    
+    if (rowCount >= 5) {
+        document.getElementById("itemTable").style.overflowY = "scroll";
+    }
+    
+    }
+    
+
+ function removeItem(button) {
+    if (rowCount > 0) {
+        var table = document.getElementById("itemTable");
+        table.deleteRow(rowCount); // Remove the last row
+        rowCount--; // Decrement the row count
+    } 
+    var row = button.parentNode.parentNode; // Go up two levels to reach the 'tr' element
+    var table = row.parentNode;
+    table.removeChild(row);
+    rowCount--;
+
+    if (rowCount < 5) {
+        document.getElementById("itemTable").style.overflowY = "auto";
+    }
+    var rows = table.getElementsByTagName('tr');
+    for (var i = 0; i < rows.length; i++) {
+        rows[i].getElementsByTagName('td')[0].textContent = i + 1;
+    }
+  }
+ 
+   
+
+document.addEventListener("blur", function (event) {
+    if (event.target && event.target.name === "qty") {
+        calculateAmount(event.target);
+    }
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+    calculateStaticAmount();
+});
+
+//Calculate the amount for the static row initially
+window.addEventListener('DOMContentLoaded', function() {
+    var staticRow = document.querySelector('#itemTable tbody tr');
+    if (staticRow) {
+        calculateAmount(staticRow);
+    }
+});
+ 
+ 
+	</script>
+		
           <script>
     var taxAmount = 0;
     var discount = 0;
@@ -424,6 +564,46 @@
         updateTaxRate(); // Update tax rate on page load
     };
 </script>
+
+<script>
+    function validateForm(event) {
+        event.preventDefault(); // Prevent form submission by default
+
+        var isValid = true;
+
+        // Perform validation for each field
+        if (!validateName(document.getElementById('email').value, 'emailError')) {
+            isValid = false;
+        }
+        // Add other field validations similarly
+        
+        if (!validateName(document.getElementById('items').value, 'itemsError')) {
+            isValid = false;
+        }
+        
+        if (!validateContactNumber(document.getElementById('phone').value, 'phoneError')) {
+            isValid = false;
+        }
+
+        if (!validateEmail(document.getElementById('email').value, 'emailError')) {
+            isValid = false;
+        }
+        
+        if (!checkJoiningDate(document.getElementById('Joining_Date').value, 'Joining_DateError')) {
+            isValid = false;
+        }
+
+        // If the form is not valid, display errors and prevent form submission
+        if (!isValid) {
+            // Display errors or perform any other necessary actions
+            return false; // Prevent form submission
+        }
+
+        // If the form is valid, you can submit the form
+        return true;
+    }
+</script>
+
 
 
 

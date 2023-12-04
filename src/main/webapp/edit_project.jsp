@@ -50,7 +50,7 @@
     String whereClause = ""; // Initialize an empty whereClause
 
     if (idFilter != null && !idFilter.isEmpty()) {
-        whereClause += "Id = '" + idFilter + "'";
+        whereClause += "project_id = '" + idFilter + "'";
     }
 
     if (!whereClause.isEmpty()) {

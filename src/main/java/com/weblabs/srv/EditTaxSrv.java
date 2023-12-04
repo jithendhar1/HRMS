@@ -19,20 +19,7 @@ package com.weblabs.srv;
 	    protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 
-	      //  HttpSession session = request.getSession();
-	      //  String userType = (String) session.getAttribute("usertype");
-	      //  String userName = (String) session.getAttribute("username");
-	      //  String password = (String) session.getAttribute("password");
-
-	       // if (userType == null || !userType.equals("admin")) {
-	          //  response.sendRedirect("login.jsp?message=Access Denied, Login As Admin!!");
-	           // return;
-	       // } else if (userName == null || password == null) {
-	           // response.sendRedirect("login.jsp?message=Session Expired, Login Again!!");
-	          //  return;
-	        //}
-
-	        // Login success
+	  
 	        String status1 = "tax Failed!";
 	        String id= request.getParameter("id");
 	        String taxname = request.getParameter("taxname");
@@ -45,6 +32,12 @@ package com.weblabs.srv;
 	        employee.setTaxName(taxname);
 	        employee.setTaxPercentage(taxper);
 	        employee.setStatus (status);
+	        
+	        employee.setID(id);
+	        employee.setTaxName(taxname);
+	        employee.setTaxPercentage(taxper);
+	        employee.setStatus(status);
+	        
 	        
 	        
 	        AddTaxServiceImpl dao = new AddTaxServiceImpl();

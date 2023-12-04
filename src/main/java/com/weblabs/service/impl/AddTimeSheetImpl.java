@@ -9,7 +9,7 @@ import com.weblabs.utility.DBUtil;
 public class AddTimeSheetImpl implements AddTimesheetService {
 
 	@Override
-		public String addTimesheet(String id,String project,String Deadline,String totalhours,String RemainingHours,String Date,String Hours,String Description)
+		public String addTimesheet(String Employee_Id,String DateWorked,String project_id,String task_id,String HoursWorked)
 	{	
 			String status = "timesheet Adding Failed!";
 
@@ -17,15 +17,13 @@ public class AddTimeSheetImpl implements AddTimesheetService {
 	        PreparedStatement ps = null;
 
 	        try {
-	        	ps = con.prepareStatement("INSERT INTO timesheet (id,Project,Deadline,totalhours,RemainingHours,Date,Hours,DescriptionName) VALUES (?,?,?,?,?,?,?,?)");
-	            ps.setString(1, id);
-	            ps.setString(2, project);
-	            ps.setString(3, Deadline);
-	            ps.setString(4, totalhours);
-	            ps.setString(5, RemainingHours);
-	            ps.setString(6, Date);
-	            ps.setString(7, Hours);
-	            ps.setString(8, Description);
+	        	ps = con.prepareStatement("INSERT INTO timesheet ( Employee_Id, DateWorked, project_id, task_id, HoursWorked) VALUES (?,?,?,?,?)");
+	            ps.setString(1, Employee_Id);
+	            ps.setString(2, DateWorked);
+	            ps.setString(3, project_id);
+	            ps.setString(4, task_id);
+	            ps.setString(5, HoursWorked);
+	           
 	           
 	
 	            int k = ps.executeUpdate();
@@ -45,25 +43,22 @@ public class AddTimeSheetImpl implements AddTimesheetService {
 	}
 
 	@Override
-	public String editTimesheet(String id, String project, String Deadline, String totalhours, String RemainingHours,
-			String Date, String Hours, String Description) {
+	public String editTimesheet(String TimesheetID,String Employee_Id,String DateWorked,String project_id,String task_id,String HoursWorked) {
 		String status = "timesheet Failed!";
 
 	    Connection con = DBUtil.provideConnection();
 	    PreparedStatement ps = null;
 
 	    try {
-	        ps = con.prepareStatement("UPDATE timesheet SET Project =?,Deadline =?,totalhours =?,RemainingHours =?,Date =?,Hours =?,DescriptionName =? WHERE id=?");  
+	        ps = con.prepareStatement("UPDATE timesheet SET Employee_Id =?,DateWorked =?,project_id =?,task_id =?,HoursWorked =? WHERE TimesheetID=?");  
 	        
 	       
-	        ps.setString(1, project);
-	        ps.setString(2, Deadline);
-	        ps.setString(3, totalhours);
-	        ps.setString(4, RemainingHours);
-	        ps.setString(5, Date);
-	        ps.setString(6, Hours);
-	        ps.setString(7, Description);
-	        ps.setString(8, id);
+	        ps.setString(1, Employee_Id);
+            ps.setString(2, DateWorked);
+            ps.setString(3, project_id);
+            ps.setString(4, task_id);
+            ps.setString(5, HoursWorked);
+	        ps.setString(6, TimesheetID);
 	       
 
 	        int k = ps.executeUpdate();
@@ -85,15 +80,15 @@ public class AddTimeSheetImpl implements AddTimesheetService {
 	
 
 	@Override
-	public String deleteTimesheet(String id) {
+	public String deleteTimesheet(String TimesheetID) {
 		  String status = "timesheet Removal Failed!";
 
 		    Connection con = DBUtil.provideConnection();
 		    PreparedStatement ps = null;
 
 		    try {
-		        ps = con.prepareStatement("DELETE FROM timesheet WHERE id = ?");
-		        ps.setString(1, id);
+		        ps = con.prepareStatement("DELETE FROM timesheet WHERE TimesheetID = ?");
+		        ps.setString(1, TimesheetID);
 
 		        int k = ps.executeUpdate();
 

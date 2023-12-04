@@ -141,14 +141,14 @@ if (newRecordsPerPageParam != null) {
             <div class="row filter-row">
                 <div class="col-sm-6 col-md-3">
                     <div class="form-group form-focus">
-                        <label for="project">Project:</label>
-                        <input type="text" name="Project" id="project">
+                        <label for="TimesheetID">TimesheetID:</label>
+                        <input type="text" name="TimesheetID" id="TimesheetID">
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
                     <div class="form-group form-focus select-focus">
-                        <label for="date">Date:</label>
-                        <input type="text" name="Date" id="date" class="datepicker">
+                        <label for="DateWorked">DateWorked:</label>
+                        <input type="text" name="DateWorked" id="DateWorked" >
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
@@ -172,14 +172,13 @@ if (newRecordsPerPageParam != null) {
             <!-- Timesheet List Table -->
             <table>
                 <tr>
-                    <th>ID</th>
-                    <th>Project</th>
-                    <th>Deadline</th>
-                    <th>Total Hours</th>
-                    <th>Remaining Hours</th>
-                    <th>Date</th>
-                    <th>Hours</th>
-                    <th>Description</th>
+                    <th>TimesheetID</th>
+                    <th>Employee_Id</th>
+                    <th>DateWorked</th>
+                    <th> project_id</th>
+                    <th>task_id </th>
+                    <th>HoursWorked</th>
+                   
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -202,21 +201,21 @@ if (newRecordsPerPageParam != null) {
               		      start = (pageno - 1) * limit;
               		     //pagenation code ended
                     
-                    String projectFilter = request.getParameter("Project");
-                    String dateFilter = request.getParameter("Date");
+                    String projectFilter = request.getParameter("TimesheetID");
+                    String dateFilter = request.getParameter("DateWorked");
                     List<AddTimesheet> timesheets;
 
                     String whereClause = ""; // Initialize an empty whereClause
 
                     if (projectFilter != null && !projectFilter.isEmpty()) {
-                        whereClause = "Project like  '%" + projectFilter + "%'";
+                        whereClause = "TimesheetID like  '%" + projectFilter + "%'";
                     }
 
                     if (dateFilter != null && !dateFilter.isEmpty()) {
                         if (!whereClause.isEmpty()) {
                             whereClause += " or ";
                         }
-                        whereClause += "Date = '" + dateFilter + "'";
+                        whereClause += "DateWorked = '" + dateFilter + "'";
                     }
                     //page
                     int recordcount= TimeSheetDAO.totalCount();
@@ -234,19 +233,18 @@ if (newRecordsPerPageParam != null) {
                     for (AddTimesheet timesheet : timesheets) {
                 %>
                 <tr>
-                    <td><%= timesheet.getId() %></td>
-                    <td><%= timesheet.getProject() %></td>
-                    <td><%= timesheet.getDeadline() %></td>
-                    <td><%= timesheet.getTotalhours() %></td>
-                    <td><%= timesheet.getRemainingHours() %></td>
-                    <td><%= timesheet.getDate() %></td>
-                    <td><%= timesheet.getHours() %></td>
-                    <td><%= timesheet.getDescription() %></td>
+                    <td><%= timesheet.getTimesheetID() %></td>
+                    <td><%= timesheet.getEmployee_Id() %></td>
+                    <td><%= timesheet.getDateWorked() %></td>
+                    <td><%= timesheet.getProject_id() %></td>
+                    <td><%= timesheet.getTask_id() %></td>
+                    <td><%= timesheet.getHoursWorked() %></td>
+                   
                     <td>
-                        <a href="edit_timesheet.jsp?id=<%= timesheet.getId() %>">Edit</a>
+                        <a href="edit_timesheet.jsp?TimesheetID=<%= timesheet.getTimesheetID() %>">Edit</a>
                     </td>
                     <td>
-                       <a href="DeleteTimeSheetSrv?id=<%=timesheet.getId() %>">Delete</a>
+                       <a href="DeleteTimeSheetSrv?TimesheetID=<%=timesheet.getTimesheetID() %>">Delete</a>
                     </td>
                 </tr>
                 <%

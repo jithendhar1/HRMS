@@ -20,7 +20,7 @@ public class AddProjectServiceImp implements AddprojectService{
         PreparedStatement ps = null;
 
         try {
-        	ps = con.prepareStatement("INSERT INTO createproject (projectname,Clientid,startdate,enddate,rate,hourly,priority,projectleader,addteam,description,uploadfile) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+        	ps = con.prepareStatement("INSERT INTO project (projectname,Clientid,startdate,enddate,rate,hourly,priority,projectleader,addteam,description,uploadfile) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, projectname);
             ps.setString(2, Clientid);
             ps.setString(3, startdate);
@@ -58,7 +58,7 @@ public class AddProjectServiceImp implements AddprojectService{
         PreparedStatement ps = null;
 
         try {
-        	ps = con.prepareStatement("DELETE FROM createproject  WHERE project_id = ?");
+        	ps = con.prepareStatement("DELETE FROM project  WHERE project_id = ?");
             ps.setString(1, project_id);
            
             int k = ps.executeUpdate();
@@ -87,7 +87,7 @@ public class AddProjectServiceImp implements AddprojectService{
         PreparedStatement ps = null;
 
         try {
-        	ps = con.prepareStatement("UPDATE createproject SET projectname=?,Clientid=?, startdate=?,enddate=?,"
+        	ps = con.prepareStatement("UPDATE project SET projectname=?,Clientid=?, startdate=?,enddate=?,"
         			+ "rate=?,hourly=?,priority=? , projectleader=? ,addteam=?,description=?, uploadfile=? WHERE project_id = ?");
         	 ps.setString(1, projectname);
         	 ps.setString(2, Clientid);

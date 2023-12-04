@@ -11,8 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 import com.weblabs.beans.SupplierBean;
 import com.weblabs.service.impl.SupplierServiceImpl;
 			
@@ -32,15 +30,14 @@ public class EditSupplierSrv extends HttpServlet {
         String supplierName = request.getParameter("supplierName");
         String productDetails= request.getParameter("productDetails");
       
-		
-        SupplierServiceImpl ass =new SupplierServiceImpl();
-     status=ass.editsup(supplierID,supplierName,productDetails );
-     
-     SupplierBean obj = new SupplierBean();
+	 SupplierBean obj = new SupplierBean();
     
      obj.setSupplierID(supplierID);
      obj.setSupplierID(supplierName);
      obj.setProductDetails(productDetails);
+     
+     SupplierServiceImpl ass =new SupplierServiceImpl();
+     status=ass.editsup(supplierID,supplierName,productDetails );
     
         RequestDispatcher rd = request.getRequestDispatcher("EditSupplier.jsp?message=" + status);
         rd.forward(request, response);
@@ -51,3 +48,7 @@ public class EditSupplierSrv extends HttpServlet {
         doGet(request, response);
     }
 }
+
+
+
+

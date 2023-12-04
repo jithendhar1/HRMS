@@ -23,7 +23,6 @@ public class DeleteSupplierSrv extends HttpServlet{
             throws ServletException, IOException {
 
         String supplierID = request.getParameter("supplierID");
-      //   id = Integer.parseInt(request.getParameter("id"));
         SupplierServiceImpl ass = new SupplierServiceImpl();
 
 		String status = ass.deletesup(supplierID);

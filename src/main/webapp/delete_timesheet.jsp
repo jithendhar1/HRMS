@@ -10,14 +10,14 @@
     window.addEventListener('load', function() {
         // Extract the 'id' parameter from the URL
         var urlParams = new URLSearchParams(window.location.search);
-        var employeeId = urlParams.get('id');
+        var employeeId = urlParams.get('TimesheetID');
 console.log("you have entered deleteEmployee");
         // Make an AJAX request to delete the employee
         var xhr = new XMLHttpRequest();
         xhr.open('POST', './DeleteTimeSheetSrv', true);
         console.log("deleteTimeSheetsrv called");
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('id=' + employeeId);
+        xhr.send('TimesheetID=' + employeeId);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {

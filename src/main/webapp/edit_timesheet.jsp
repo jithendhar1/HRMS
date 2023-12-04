@@ -44,13 +44,13 @@
     int start = 0;
     int limit = 25;
 
-    String idFilter = request.getParameter("id"); // Make sure the parameter name matches your form
+    String idFilter = request.getParameter("TimesheetID"); // Make sure the parameter name matches your form
     List<AddTimesheet> timesheet = null; // Initialize the list as empty
 
     String whereClause = ""; // Initialize an empty whereClause
 
     if (idFilter != null && !idFilter.isEmpty()) {
-        whereClause += "Id = '" + idFilter + "'";
+        whereClause += "TimesheetID = '" + idFilter + "'";
     }
 
     if (!whereClause.isEmpty()) {
@@ -87,39 +87,32 @@
   <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-form-label">ID <span class="text-danger">*</span></label>
-                            <input name="id" value="<%= time.getId() %>" required class="form-control" type="text" readonly>
+                            <label class="col-form-label">TimesheetID <span class="text-danger">*</span></label>
+                            <input name="TimesheetID" value="<%= time.getTimesheetID() %>" required class="form-control" type="text" readonly>
                         </div>
                         <div class="form-group">
-                            <label class="col-form-label">Project <span class="text-danger">*</span></label>
-                            <input name="project" value="<%= time.getProject() %>" required class="form-control" type="text">
+                            <label class="col-form-label">Employee_Id <span class="text-danger">*</span></label>
+                            <input name="Employee_Id" value="<%= time.getEmployee_Id() %>" required class="form-control" type="text">
                         </div>
               
                         <div class="form-group">
-                            <label class="col-form-label">Deadline <span class="text-danger">*</span></label>
-                            <input name="deadline" value="<%= time.getDeadline() %>" required class="form-control" type="text">
+                            <label class="col-form-label">DateWorked <span class="text-danger">*</span></label>
+                            <input name="DateWorked" value="<%= time.getDateWorked() %>" required class="form-control" type="text">
                         </div>
                         <div class="form-group">
-                            <label class="col-form-label">Total Hours <span class="text-danger">*</span></label>
-                            <input name="totalhours" value="<%= time.getTotalhours() %>" required class="form-control" type="text">
+                            <label class="col-form-label">project_id <span class="text-danger">*</span></label>
+                            <input name="project_id" value="<%= time.getProject_id() %>" required class="form-control" type="text">
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Remaining Hours <span class="text-danger">*</span></label>
-                            <input name="remaininghours" value="<%= time.getRemainingHours() %>" required class="form-control" type="text">
+                            <input name="task_id" value="<%= time.getTask_id() %>" required class="form-control" type="text">
                         </div>
 
                         <div class="form-group">
-                            <label class="col-form-label">Date <span class="text-danger">*</span></label>
-                            <input name="date" value="<%= time.getDate() %>" required class="form-control" type="text">
+                            <label class="col-form-label">HoursWorked <span class="text-danger">*</span></label>
+                            <input name="HoursWorked" value="<%= time.getHoursWorked() %>" required class="form-control" type="text">
                         </div>
-                        <div class="form-group">
-                            <label class="col-form-label">Hours <span class="text-danger">*</span></label>
-                            <input name="hours" value="<%= time.getHours() %>" required class="form-control" type="text">
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">Description <span class="text-danger">*</span></label>
-                            <input name="description" value="<%= time.getDescription() %>" required class="form-control" type="text">
-                        </div>
+                       
                        
  
                         <div class="submit-section">

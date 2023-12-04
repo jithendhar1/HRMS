@@ -1,7 +1,7 @@
 	<!DOCTYPE html>
 <html>
 <head>
-    <title>Delete Assets Form</title>
+    <title>Delete  Form</title>
 </head>
 <body>
 

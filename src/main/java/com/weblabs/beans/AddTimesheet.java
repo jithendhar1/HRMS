@@ -1,62 +1,53 @@
 package com.weblabs.beans;
 
+
+
 public class AddTimesheet {
+	private String TimesheetID;
+	private String Employee_Id;
+	private String DateWorked;
+	private String project_id;
+	private String task_id;
+	private String HoursWorked;
+	public String getTimesheetID() {
+		return TimesheetID;
+	}
+	public void setTimesheetID(String timesheetID) {
+		TimesheetID = timesheetID;
+	}
+	public String getEmployee_Id() {
+		return Employee_Id;
+	}
+	public void setEmployee_Id(String employee_Id) {
+		Employee_Id = employee_Id;
+	}
+	public String getDateWorked() {
+		return DateWorked;
+	}
+	public void setDateWorked(String dateWorked) {
+		DateWorked = dateWorked;
+	}
+	public String getProject_id() {
+		return project_id;
+	}
+	public void setProject_id(String project_id) {
+		this.project_id = project_id;
+	}
+	public String getTask_id() {
+		return task_id;
+	}
+	public void setTask_id(String task_id) {
+		this.task_id = task_id;
+	}
+	public String getHoursWorked() {
+		return HoursWorked;
+	}
+	public void setHoursWorked(String hoursWorked) {
+		HoursWorked = hoursWorked;
+	}
+
+
 	
-	private String id;
-	public String getId() {
-		return id;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	private String project;
-	private String Deadline;
-	private String totalhours;
-	private String RemainingHours;
-	private String Date;
-	private String Hours;
-	private String Description;
-	
-	public String getProject() {
-		return project;
-	}
-	public void setProject(String project) {
-		this.project = project;
-	}
-	public String getDeadline() {
-		return Deadline;
-	}
-	public void setDeadline(String deadline) {
-		Deadline = deadline;
-	}
-	public String getTotalhours() {
-		return totalhours;
-	}
-	public void setTotalhours(String totalhours) {
-		this.totalhours = totalhours;
-	}
-	public String getRemainingHours() {
-		return RemainingHours;
-	}
-	public void setRemainingHours(String remainingHours) {
-		RemainingHours = remainingHours;
-	}
-	public String getDate() {
-		return Date;
-	}
-	public void setDate(String date) {
-		Date = date;
-	}
-	public String getHours() {
-		return Hours;
-	}
-	public void setHours(String hours) {
-		Hours = hours;
-	}
-	public String getDescription() {
-		return Description;
-	}
-	public void setDescription(String description) {
-		Description = description;
-	}
-}
+
+

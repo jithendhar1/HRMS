@@ -1,5 +1,7 @@
+<%@ page import="com.weblabs.service.impl.taskDAO" %>
 <%@ page import="com.weblabs.service.impl.ProjectDAO" %>
 <%@ page import="com.weblabs.beans.CreateProject" %>
+<%@ page import="com.weblabs.beans.TasksBean" %>
 				
 <%@ page import="java.util.List" %>
 
@@ -7,38 +9,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%--  <%
-    // Get the project ID from the request parameter or session
-    int projectId = Integer.parseInt(request.getParameter("project_id"));
-    
-    // Instantiate ProjectDAO
-    ProjectDAO projectDAO = new ProjectDAO();
-    
-    // Get the project by ID
-    CreateProject project = projectDAO.getProjectById(projectId);
-%>  --%>
-
- <%
-    // Get the project ID from the request parameter or session
-    int projectId = 0; // Default value or handle the case when the parameter is not present
-    String projectIdParam = request.getParameter("project_id");
-    
-    if (projectIdParam != null && !projectIdParam.isEmpty()) {
-        try {
-            projectId = Integer.parseInt(projectIdParam);
-        } catch (NumberFormatException e) {
-            // Handle the case where the parameter is not a valid integer
-            e.printStackTrace();
-        }
-    }
-
-    // Instantiate ProjectDAO
-    ProjectDAO projectDAO = new ProjectDAO();
-    CreateProject project = projectDAO.getProjectById(projectId);
-%>
-
-
-
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,10 +21,10 @@
 		<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
         <meta name="author" content="Dreamguys - Bootstrap Admin Template">
         <meta name="robots" content="noindex, nofollow">
-        <title>Projects - HRMS admin template</title>
+        <title>Taxes - HRMS admin template</title>
 		
 		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="assets/logo.png">
+        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
 		
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -66,33 +38,85 @@
 		<!-- Select2 CSS -->
 		<link rel="stylesheet" href="css/select2.min.css">
 		
-		<!-- Datetimepicker CSS -->
-		<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
-		
-		<!-- Summernote CSS -->
-		<link rel="stylesheet" href="plugins/summernote/dist/summernote-bs4.css">
-		
 		<!-- Main CSS -->
         <link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/styles.css">
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
-			<script src="js/html5shiv.min.js"></script>
-			<script src="js/respond.min.js"></script>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
+		
+		
+		<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		
+		
     </head>
     <body>
-		<!-- Main Wrapper -->
+<%
+HttpSession sessionRec = request.getSession(true);
+
+// Initialize recordsPerPage and currentPage as Java variables
+String recordsPerPageStr = (String) sessionRec.getAttribute("recordsPerPage");
+String currentPageStr = (String) sessionRec.getAttribute("currentPage");
+
+if (recordsPerPageStr == null || "0".equals(recordsPerPageStr)) {
+    recordsPerPageStr = "5"; // Set a default value, e.g., 1
+    sessionRec.setAttribute("recordsPerPage", recordsPerPageStr);
+}
+int recordsPerPage = Integer.parseInt(recordsPerPageStr);
+
+if (currentPageStr == null || "0".equals(currentPageStr)) {
+    currentPageStr = "1"; // Set a default value, e.g., 1
+    sessionRec.setAttribute("currentPage", currentPageStr);
+}
+int currentPage = Integer.parseInt(currentPageStr);
+
+// Handle the change in recordsPerPage here
+int newRecordsPerPage = 5; // Default value
+String newRecordsPerPageParam = request.getParameter("newRecordsPerPage");
+if (newRecordsPerPageParam != null) {
+    newRecordsPerPage = Integer.parseInt(newRecordsPerPageParam);
+    sessionRec.setAttribute("recordsPerPage", String.valueOf(newRecordsPerPage));
+    //currentPage = 1; // Reset to the first page when changing recordsPerPage
+    //sessionRec.setAttribute("currentPage", "1");
+}
+
+%>
+<script>
+    var recordsPerPage = <%= recordsPerPage %>; // Use Java variable in JavaScript
+    var currentPage = <%= currentPage %>; 
+ 
+    function changeRecordsPerPage() {
+        var recordsPerPageSelect = document.getElementById("recordsPerPage");
+        var selectedValue = recordsPerPageSelect.value;
+        
+        // Update the URL with the selected "recordsPerPage" value and navigate to it
+        var baseUrl = window.location.href.split('?')[0];
+        var newUrl = baseUrl + '?newRecordsPerPage=' + selectedValue;
+        window.location.href = newUrl;
+    }
+</script>
+			<!-- Main Wrapper -->
         <div class="main-wrapper">
 		
-			<!-- Header -->
-           <jsp:include page="header.jsp" />
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-             <jsp:include page="sidebar.jsp" />
-			<!-- /Sidebar -->
-			
+		 <!-- Header -->
+        <jsp:include page="header.jsp" />
+        <!-- Include your header HTML here -->
+         
+
+        <!-- Sidebar -->
+        <jsp:include page="sidebar.jsp" />
+        <!-- Include your sidebar HTML here -->			
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 			
@@ -105,274 +129,119 @@
 							<div class="col">
 								<h3 class="page-title">Projects</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
 									<li class="breadcrumb-item active">Projects</li>
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="#" class="btn add-btn" data-toggle="modal" data-target="#create_project"><i class="fa fa-plus"></i> Create Project</a>
-								<div class="view-icons">
-									<a href="projects.jsp" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
-									<a href="project-list.jsp" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
-								</div>
+							<a href="#" class="btn add-btn" data-toggle="modal" data-target="#create_project"><i class="fa fa-plus"></i> Create Project</a>
 							</div>
 						</div>
 					</div>
-					<!-- /Page Header -->
-					
-					<!-- Search Filter -->
-					<div class="row filter-row">
-						<div class="col-sm-6 col-md-3">  
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Project Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">  
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Employee Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3"> 
-							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
-									<option>Select Roll</option>
-									<option>Web Developer</option>
-									<option>Web Designer</option>
-									<option>Android Developer</option>
-									<option>Ios Developer</option>
-								</select>
-								<label class="focus-label">Designation</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">  
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
-						</div>     
-                    </div>
-					<!-- Search Filter -->
-					
-					
-					
-					
-					
-					<div class="row">
-						<div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-							<div class="card">
-								<div class="card-body">
-									<div class="dropdown dropdown-action profile-action">
-										<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-											<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-										</div>
-									</div>
-									
-									
-									<h4 class="project-title"><a href="project-view.jsp">Office Management</a></h4>
-									<small class="block text-ellipsis m-b-15">
-										<span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
-										<span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
-									</small>
-									
-									
-									<p class="text-muted">Lorem Ipsum is simply dummy text of the printing and
-										typesetting industry. When an unknown printer took a galley of type and
-										scrambled it...
-									</p>
-									
-									<div class="pro-deadline m-b-15">
-										<div class="sub-title">
-											Deadline:
-										</div>
-										<div class="text-muted">
-											17 Apr 2019
-										</div>
-									</div>
-									
-									
-									<div class="project-members m-b-15">
-										<div>Project Leader :</div>
-										<ul class="team-members">
-											<li>
-												<a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/profiles/avatar-16.jpg"></a>
-											</li>
-										</ul>
-									</div>
-									
-									
-									<div class="project-members m-b-15">
-										<div>Team :</div>
-										<ul class="team-members">
-											<li>
-												<a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/profiles/avatar-02.jpg"></a>
-											</li>
-											<li>
-												<a href="#" data-toggle="tooltip" title="Richard Miles"><img alt="" src="assets/profiles/avatar-09.jpg"></a>
-											</li>
-											<li>
-												<a href="#" data-toggle="tooltip" title="John Smith"><img alt="" src="assets/profiles/avatar-10.jpg"></a>
-											</li>
-											<li>
-												<a href="#" data-toggle="tooltip" title="Mike Litorus"><img alt="" src="assets/profiles/avatar-05.jpg"></a>
-											</li>
-											<li class="dropdown avatar-dropdown">
-												<a href="#" class="all-users dropdown-toggle" data-toggle="dropdown" aria-expanded="false">+15</a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<div class="avatar-group">
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-02.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-09.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-10.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-05.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-11.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-12.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-13.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-01.jpg">
-														</a>
-														<a class="avatar avatar-xs" href="#">
-															<img alt="" src="assets/profiles/avatar-16.jpg">
-														</a>
-													</div>
-													<div class="avatar-pagination">
-														<ul class="pagination">
-															<li class="page-item">
-																<a class="page-link" href="#" aria-label="Previous">
-																	<span aria-hidden="true">«</span>
-																	<span class="sr-only">Previous</span>
-																</a>
-															</li>
-															<li class="page-item"><a class="page-link" href="#">1</a></li>
-															<li class="page-item"><a class="page-link" href="#">2</a></li>
-															<li class="page-item">
-																<a class="page-link" href="#" aria-label="Next">
-																	<span aria-hidden="true">»</span>
-																<span class="sr-only">Next</span>
-																</a>
-															</li>
-														</ul>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-									
-									
-									
-									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-									<div class="progress progress-xs mb-0">
-										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						
-				<!-- 	************************ -->
-						
-				
-					
-					                    <% if (project != null) { %>
-                        <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <!-- Display project information here -->
-                                    <h4 class="project-title"><a href="project-view.jsp"><%= project.getProjectname() %></a></h4>
-                                    <!-- Display other project details as needed -->
-                                    <small class="block text-ellipsis m-b-15">
-                                        <!-- Display task information, completion status, etc. -->
-                                    </small>
-                                    <p class="text-muted"><%= project.getDescription() %></p>
-                                    <!-- Display other project details as needed -->
-                                    <div class="pro-deadline m-b-15">
-                                        <div class="sub-title">
-                                            Deadline:
-                                        </div>
-                                        <div class="text-muted">
-                                            <%= project.getEnddate() %>
-                                        </div>
-                                    </div>
-                                    <!-- Display project leader and team members -->
-                                    
-                                    <!-- ... Your existing project member display code ... -->
-                                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-                                    <div class="progress progress-xs mb-0">
-                                        <div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>
-                                    </div>
-                                </div>
-                            </div>
+
+
+
+<%
+List<CreateProject> projects = ProjectDAO.getAllProjects(); // Initialize with the actual list of projects
+int totalcount = ProjectDAO.totalCount(); // Assuming totalcount is the total number of projects
+int columnCount = 4;
+int finalrs = totalcount % columnCount;
+int finalrscolsspan = finalrs > 0 ? 12 / finalrs : 0;
+int currentIndex = 0; // Start index from 0
+
+for (int row = 1; currentIndex < totalcount; row++) {
+%>
+
+   <div class="row">
+        <% for (int col = 0; col < columnCount; col++) {
+            if (currentIndex < totalcount) { // Ensure not to exceed the total count of projects
+                CreateProject project = projects.get(currentIndex);
+
+                int projectId = Integer.parseInt(project.getProject_id());
+
+                // Call the method to get task counts for the project
+                Map<String, Integer> taskCounts = taskDAO.getTaskCountsForProject(projectId);
+
+                // Access the values directly
+                int totalTaskCount = taskCounts.get("totalTaskCount");
+                int completedCount = taskCounts.get("completedCount");
+                int pendingCount = taskCounts.get("pendingCount");
+        %>
+                <div class="col-md-3" style="padding: 10px; word-wrap: break-word;">
+                    <div class="dropdown dropdown-action profile-action">
+                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a> -->
+                            <a href="edit_project.jsp?project_id=<%= project.getProject_id() %>">Edit</a><br>
+ 							<a href="DeleteProjectSrv?project_id=<%= project.getProject_id()%>">Delete</a> 
                         </div>
-                    <% } else { %>
-                        <p>No project found.</p>
-                    <% } %>
-					
-					
-                </div> 
-				
-
-<%-- 
-<%-- Assuming you have a List<CreateProject> named projectList in your request or session --%>
-<%-- <c:forEach var="project" items="${projectList}">
-    <div>
-        <h4>Project ID: <c:out value="${project.getProject_id()}" /></h4>
-        <table border="1">
-            <tr>
-                <th>Project ID</th>
-                <th>Projectname</th>
-                <th>Enddate</th>
-                <th>Description</th>
-            </tr>
-            <c:forEach var="k" begin="1" end="10" step="4">
-                <tr>
-                    <td><c:out value="${project.getProject_id()}" /></td>
-                    <td><c:out value="${k} * ${project.getProjectname()}" /></td>
-                    <td><c:out value="${project.getProjectEnddate()}" /></td>
-                    <td><c:out value="${k + 1} * ${project.getDescription()}" /></td>
-                </tr>
-            </c:forEach>
-        </table>
+                    </div>
+                    <h4 class="project-title text-center"><a href="project-view.jsp"> <%= project.getProjectname() %></a></h4><br>
+                    <small class="block text-ellipsis m-b-15">
+                        <span class="text-xs"><%= pendingCount %></span> <span class="text-muted"> tasks pending </span> 
+                        <span class="text-xs"><%= completedCount %></span> <span class="text-muted"> tasks completed</span>
+                    </small>
+                    <p class="text-muted"><%= project.getDescription() %></p>
+                    DeadLine: <p class="text-muted"><%= project.getEnddate() %>  </p>                 
+                    <!-- Add other project attributes as needed -->
+                    <div class="project-members m-b-15">
+                        <div>Project Leader :</div>
+                        <ul class="team-members">
+                            <li>
+                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/profiles/avatar-16.jpg"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="project-members m-b-15">
+                        <div>Team :</div>
+                        <ul class="team-members">
+                            <li>
+                                <a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/profiles/avatar-02.jpg"></a>
+                            </li>
+                            <!-- Add more team members as needed -->
+                        </ul>
+                    </div>
+                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
+                    <div class="progress progress-xs mb-0">
+                        <div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>
+                    </div>
+                </div>
+        <% } else { %>
+                <!-- Empty columns for padding in the last row -->
+                <div class="col-md-3" style="padding: 10px;"></div>
+        <% }
+           currentIndex++; // Increment the index for the next project
+           }
+        %>
     </div>
-</c:forEach>
+    <br> <!-- Add a line break between rows -->
 
-<c:if test="${empty projectList}">
-    <p>No project found.</p>
-</c:if>
- --%>
+<%
+}
+%>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
  
-				
-				
-				
-<jsp:include page="add_project.jsp" />
-<!-- /Create Project Modal -->
+ <!-- 	************************ -->
+ 
 
-<!-- Edit Project Modal -->
-<jsp:include page="edit_project.jsp" />
-<!-- /Edit Project Modal -->
-
-<!-- Delete Project Modal -->
-<jsp:include page="delete_project.jsp" />
-<!-- /Delete Project Modal -->
-
+							</div>
+						</div>
+					
+				<!-- /Page Content -->
 				
-            </div>
-			<!-- /Page Wrapper -->
-
-        </div>
-		<!-- /Main Wrapper -->
+				<!-- Add Tax Modal -->
+				 <jsp:include page="add_project.jsp" />
+				<!-- /Add Tax Modal -->
+				
+			
+				
+            
 
 		<!-- jQuery -->
         <script src="js/jquery-3.2.1.min.js"></script>
@@ -386,17 +255,36 @@
 		
 		<!-- Select2 JS -->
 		<script src="js/select2.min.js"></script>
-		
-		<!-- Datetimepicker JS -->
-		<script src="js/moment.min.js"></script>
-		<script src="js/bootstrap-datetimepicker.min.js"></script>
-		
-		<!-- Summernote JS -->
-		<script src="assets/plugins/summernote/dist/summernote-bs4.min.js"></script>
 
 		<!-- Custom JS -->
 		<script src="js/app.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#filterButton").click(function () {
+            // Get filter criteria (username and id)
+            var usernameFilter = $("#projectname").val();
+            var idFilter = $("#project_id").val();
+            
+            // Make an AJAX request to the server
+            $.ajax({
+                type: "POST", // Use POST or GET depending on your servlet configuration
+                url: "./ProjectsSearchSRV",
+                data: {
+                    username: usernameFilter,
+                    id: idFilter
+                }
+                success: function (data) {
+                	
+                	  console.log("myFunction has been invoked.");
+                    // Handle the response data, e.g., update the table with the filtered data
+                    // You might need to format the data as required
+                    $("#employeeTable").html(data);
+                }
+            });
+        });
+    });
+</script>
+
     </body>
-    </html>
-    
+</html>
     

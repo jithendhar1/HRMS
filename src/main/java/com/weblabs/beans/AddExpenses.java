@@ -12,6 +12,15 @@ public class AddExpenses {
 	private String Status;
 	private String Attachments;
 	private String Supplierid;
+	private int num;
+
+public String getnum() {
+		return Num;
+	}
+	public void setNum(String id) {
+		Num = num;
+	}
+	
 	
 	public String getSupplierid() {
 		return Supplierid;

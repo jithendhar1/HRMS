@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 public class AddLeaves {
 	
 	private String id;
-	private String Employee;
-	private String Starting_At;
+	private String Employees;
+	private String Starting_Ats;
 	private String Ending_On;
 	private String Days;
 	private String Reason;

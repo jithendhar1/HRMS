@@ -4,9 +4,7 @@ public class AddClient {
 
 	private int id;
 	private String FirstName;
-	private String LastName;
-	private String UserName;
-	private String Email;
+	private String LastNames;
 	private String Password;
 	private String ConfirmPassword;
 	private String Clientid;

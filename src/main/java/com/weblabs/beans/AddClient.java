@@ -3,11 +3,7 @@ package com.weblabs.beans;
 public class AddClient {
 
 	private int id;
-	private String FirstName;
-	private String LastNames;
-	private String Password;
-	private String ConfirmPassword;
-	private String Clientid;
+	private String FirstNames;
 	private String Phone;
 	private String Company;
 	private String Address;

@@ -3,7 +3,7 @@ package com.weblabs.beans;
 public class AddDepartment {
 	
 	private String id;
-	private String DepartmentName;
+	private String Departmen;
 
 	public String getId() {
 		return id;

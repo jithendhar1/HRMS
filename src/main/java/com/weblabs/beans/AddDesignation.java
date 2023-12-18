@@ -4,7 +4,7 @@ public class AddDesignation {
 	
 	private String id;
 	private String DesignationName;
-	private String DepartmentName;
+	private String DepartmentNameee;
 	
 	public String getId() {
 		return id;
